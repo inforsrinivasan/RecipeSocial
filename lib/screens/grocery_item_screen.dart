@@ -85,8 +85,10 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
             buildImportanceField(),
             buildDateField(),
             buildTimeField(),
-            // add color picker
-            // add slider
+            const SizedBox(height: 10),
+            buildCOlorPicker(),
+            const SizedBox(height: 10),
+            buildQuantityField()
             // aadd grocery title
           ],
         ),
@@ -227,8 +229,89 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
     );
   }
 
-  // TODO: Add buildColor picker
+  Widget buildCOlorPicker() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+              height: 50,
+              width: 10,
+              color: _currentColor,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Color',
+              style: GoogleFonts.lato(fontSize: 28),
+            )
+          ],
+        ),
+        TextButton(
+          child: const Text('Select'),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: BlockPicker(
+                      pickerColor: Colors.white,
+                      onColorChanged: (color) {
+                        setState(() {
+                          _currentColor = color;
+                        });
+                      },
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text('Save'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  );
+                });
+          },
+        )
+      ],
+    );
+  }
 
-  // TODO: Add buildQuantity Field
-
+  Widget buildQuantityField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Text(
+              'Quantity',
+              style: GoogleFonts.lato(fontSize: 28),
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            Text(_currentSliderValue.toInt().toString(),
+                style: GoogleFonts.lato(fontSize: 18.0))
+          ],
+        ),
+        Slider(
+          inactiveColor: _currentColor.withOpacity(0.5),
+          activeColor: _currentColor,
+          value: _currentSliderValue.toDouble(),
+          min: 0.0,
+          max: 100.0,
+          divisions: 100,
+          label: _currentSliderValue.toInt().toString(),
+          onChanged: (value) {
+            setState(() {
+              _currentSliderValue = value.toInt();
+            });
+          },
+        )
+      ],
+    );
+  }
 }
